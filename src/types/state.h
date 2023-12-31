@@ -8,6 +8,8 @@ class State {
 public:
   State() = default;
   State(const std::string& snapshot) { restore(snapshot); }
+  
+  virtual ~State() = default;
 
   virtual void snapshot(const std::string& filepath) {
     // For now : Use pretty-json like formatting
@@ -18,7 +20,7 @@ public:
       for (const auto &byte : it->first) {
         serialized += byteToHex(byte);
       }
-      serialized += "\" : " + it->second.toSerialized();
+      serialized += "\" : " + it->second->toSerialized();
       if (it == --state.end()) {
         serialized += "\n  }\n";
       } else {
@@ -98,7 +100,7 @@ public:
           }
           std::array<uint8_t, 20> keyArray;
           std::copy(keyBytes, keyBytes + 20, keyArray.begin());
-          insert(keyArray, Account(value));
+          insert(keyArray, std::make_shared<Account>(value));
           //state[keyBytes] = Account(value);
 
           item = "";
@@ -111,14 +113,20 @@ public:
     }
   }
 
-  virtual void insert(const address& addr, const Account& account) { state[addr] = account; }
-  virtual void insert(const std::string& addr, const Account& account) { insert(parseAddress(addr), account); }
+  virtual void insert(const address& addr, std::shared_ptr<Account> account) { state[addr] = account; }
+  virtual void insert(const std::string& addr, std::shared_ptr<Account> account) { insert(parseAddress(addr), account); }
 
   virtual void remove(const address& addr) { state.erase(addr); }
   virtual void remove(const std::string& addr) { remove(parseAddress(addr)); }
 
-  virtual std::shared_ptr<Account> get(const address& addr) const { return std::make_shared<Account>(state.at(addr)); }
+  virtual std::shared_ptr<Account> get(const address& addr) const {
+    auto it = state.find(addr);
+    if (it == state.end()) {
+      return nullptr;
+    }
+    return it->second;
+  }
   virtual std::shared_ptr<Account> get(const std::string& addr) const { return get(parseAddress(addr)); }
 private:
-  std::map<address, Account> state; // TODO: Use merkle structure
+  std::map<address, std::shared_ptr<Account>> state; // TODO: Use merkle structure
 };

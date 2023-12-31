@@ -14,6 +14,8 @@ public:
     number(number), difficulty(difficulty) {}
   BlockContext(const std::string& blockContextFile) { load(blockContextFile); }
 
+  virtual ~BlockContext() = default;
+
   virtual void load(const std::string& blockContextFile) {
     // TODO
   }

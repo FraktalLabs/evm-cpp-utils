@@ -15,6 +15,8 @@ public:
   Account() = default;
   Account(const std::string& serialized) { fromSerialized(serialized); }
 
+  virtual ~Account() = default;
+
   virtual std::string toString() const { return "Account{nonce=" + std::to_string(nonce) + ", balance=" + to_string(balance) + ", storage=" + std::to_string(storage.size()) + ", code=" + std::to_string(code.size()) + "}"; }
 
   virtual std::string toSerialized() const {
@@ -110,13 +112,14 @@ public:
 
   intx::uint256 getStorage(const intx::uint256& key) const {
     auto it = storage.find(key);
-    if (it != storage.end()) {
+    if (it == storage.end()) {
       return 0;
     }
     return it->second;
   }
-  virtual void setStorage(const intx::uint256& key, const intx::uint256& value) { storage.insert_or_assign(key, value); }
+  virtual void setStorage(const intx::uint256& key, const intx::uint256& value) { storage[key] = value; }
 
+  bytes getCode() const { return code; }
   virtual void setCode(const bytes& bytecode) { code = bytecode; }
   virtual void setCode(const std::string& bytecode) { code = parseBytecode(bytecode); }
   uint64_t getCodeSize() const { return code.size(); }

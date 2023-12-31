@@ -13,6 +13,8 @@ public:
   TxContext(address origin, intx::uint256 gasPrice): origin(origin), gasPrice(gasPrice) {}
   TxContext(const std::string& txContextFile) { load(txContextFile); }
 
+  virtual ~TxContext() = default;
+
   virtual void load(const std::string& txContextFile) {
     // TODO
   }

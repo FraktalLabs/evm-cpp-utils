@@ -5,7 +5,9 @@
 
 #include "../types/core.h"
 
-bytes parseBytecode(const std::string& bytecode) {
+// TODO: Reconsider using inline functions
+
+inline bytes parseBytecode(const std::string& bytecode) {
   bytes result;
   for(int i = 0; i < bytecode.size(); i += 2) {
     std::string byteString = bytecode.substr(i, 2);
@@ -16,7 +18,7 @@ bytes parseBytecode(const std::string& bytecode) {
   return result;
 };
 
-bytes parseBytecodeFile(const std::string& filename) {
+inline bytes parseBytecodeFile(const std::string& filename) {
   std::ifstream file(filename);
   std::string bytecode;
   std::getline(file, bytecode);
@@ -24,7 +26,7 @@ bytes parseBytecodeFile(const std::string& filename) {
   return parseBytecode(bytecode);
 };
 
-bytes parseBytes(const std::string& byteStr) {
+inline bytes parseBytes(const std::string& byteStr) {
   bytes result;
   for(int i = 0; i < byteStr.size(); i += 2) {
     std::string byteString = byteStr.substr(i, 2);
@@ -35,7 +37,7 @@ bytes parseBytes(const std::string& byteStr) {
   return result;
 };
 
-address parseAddress(const std::string& addr) {
+inline address parseAddress(const std::string& addr) {
   address result;
   for(int i = 0; i < addr.size(); i += 2) {
     std::string byteString = addr.substr(i, 2);
@@ -46,13 +48,13 @@ address parseAddress(const std::string& addr) {
   return result;
 }
 
-std::string byteToHex(uint8_t byte) {
+inline std::string byteToHex(uint8_t byte) {
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(byte);
   return ss.str();
 }
 
-std::string bytecodeToHex(const bytes& bytecode) {
+inline std::string bytecodeToHex(const bytes& bytecode) {
   std::stringstream ss;
   for(uint8_t byte : bytecode) {
     ss << byteToHex(byte);
@@ -60,7 +62,7 @@ std::string bytecodeToHex(const bytes& bytecode) {
   return ss.str();
 }
 
-std::string addressToHex(const address& address) {
+inline std::string addressToHex(const address& address) {
   std::stringstream ss;
   for (int i = 0; i < 20; i++) {
     ss << byteToHex(address[i]);
@@ -68,7 +70,7 @@ std::string addressToHex(const address& address) {
   return ss.str();
 }
 
-bytes compileContract(const std::string& source) {
+inline bytes compileContract(const std::string& source) {
   // TODO: implement
   return bytes();
 }
