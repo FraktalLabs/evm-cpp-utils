@@ -127,6 +127,6 @@ public:
     return it->second;
   }
   virtual std::shared_ptr<Account> get(const std::string& addr) const { return get(parseAddress(addr)); }
-private:
+protected:
   std::map<address, std::shared_ptr<Account>> state; // TODO: Use merkle structure
 };

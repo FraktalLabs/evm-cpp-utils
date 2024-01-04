@@ -1,7 +1,9 @@
 # pragma once
 
+#include <iostream>
 #include <string>
 #include <map>
+#include <memory>
 
 #include "core.h"
 #include "../utils/utils.h"
@@ -14,6 +16,14 @@ class Account {
 public:
   Account() = default;
   Account(const std::string& serialized) { fromSerialized(serialized); }
+  Account(const Account& other) = default;
+  Account(std::shared_ptr<Account> other) { 
+    // TODO: use move semantics?
+    nonce = other->nonce;
+    balance = other->balance;
+    storage = other->storage;
+    code = other->code;
+  }
 
   virtual ~Account() = default;
 
@@ -110,7 +120,7 @@ public:
   intx::uint256 getBalance() const { return balance; }
   virtual void setBalance(const intx::uint256& value) { balance = value; }
 
-  intx::uint256 getStorage(const intx::uint256& key) const {
+  virtual intx::uint256 getStorage(const intx::uint256& key) const {
     auto it = storage.find(key);
     if (it == storage.end()) {
       return 0;
@@ -126,7 +136,7 @@ public:
   uint8_t* getCodePtrAt(uint64_t offset) const { return (uint8_t*) &code[offset]; }
   intx::uint256 getCodeHash() const { return intx::be::load<intx::uint256>(ethash_keccak256(getCodePtrAt(0), getCodeSize())); }
 
-private:
+protected:
   uint64_t nonce;
   intx::uint256 balance;
   std::map<intx::uint256, intx::uint256> storage; // TODO: use a merkle tree type structure?
