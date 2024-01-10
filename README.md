@@ -39,7 +39,7 @@ Inherit from virtual classes to modify and/or wrap EVM base implementation.
 
 ## Media
 
-![EVM State Chart]([images]/evm-cpp-utils/evm-state-chart.jng)
+![EVM State Chart](https://github.com/FraktalLabs/docs/blob/master/images/evm-cpp-utils/evm-state-chart.jpg)
 
 ## Maintainer
 
@@ -53,4 +53,3 @@ Brandon Roberts [@b-j-roberts]
 [ethash]: http://github.com/chfast/ethash
 [MIT]: LICENSE
 [@b-j-roberts]: https://github.com/b-j-roberts
-[images]: https://github.com/FraktalLabs/docs/blob/master/images
